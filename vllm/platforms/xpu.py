@@ -26,6 +26,15 @@ class XPUPlatform(Platform):
     ray_device_key: str = "GPU"
     device_control_env_var: str = "ONEAPI_DEVICE_SELECTOR"
 
+    def is_ipex_supported(self) -> bool:
+        try:
+            # installed IPEX if the machine has XPUs.
+            import intel_extension_for_pytorch  # noqa: F401
+            import oneccl_bindings_for_pytorch  # noqa: F401
+            return True
+        except:
+            return False
+
     @classmethod
     def get_attn_backend_cls(cls, selected_backend: _Backend, head_size: int,
                              dtype: torch.dtype, kv_cache_dtype: Optional[str],
